@@ -1,0 +1,52 @@
+@startuml
+title Hospital Management System - C4 Level 2 Container Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam rectangle {
+  RoundCorner 15
+  BorderColor black
+}
+skinparam database {
+  BorderColor black
+}
+skinparam actor {
+  BorderColor black
+}
+
+actor "Patient" as patient
+actor "Doctor" as doctor
+actor "Administrative Staff" as admin
+actor "Billing Officer" as billing
+actor "Laboratory Staff" as lab
+actor "Radiology Staff" as radiology
+actor "Pharmacist" as pharmacy
+
+rectangle "Hospital Management System" as hms {
+
+  rectangle "Web / Mobile Portal\n\n[Frontend Application]\nAllows patients and hospital staff to access system services" as portal
+
+  rectangle "Backend API\n\n[Application Server]\nHandles business logic for registration, appointments, records, billing, prescriptions, and department coordination" as api
+
+  database "Centralized Database\n\n[Relational Database]\nStores patient demographics, appointments, medical records, prescriptions, billing data, and departmental reports" as db
+
+  rectangle "Notification Service\n\n[Email / SMS Service]\nSends appointment confirmations, report alerts, and billing notifications" as notif
+}
+
+patient --> portal : Uses
+doctor --> portal : Uses
+admin --> portal : Uses
+billing --> portal : Uses
+lab --> portal : Uses
+radiology --> portal : Uses
+pharmacy --> portal : Uses
+
+portal --> api : Sends requests to
+api --> db : Reads / writes data
+api --> notif : Triggers notifications
+
+notif --> patient : Appointment / report alerts
+notif --> doctor : Patient update alerts
+
+@enduml
