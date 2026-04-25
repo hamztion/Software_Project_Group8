@@ -1,0 +1,67 @@
+@startuml
+title Hospital Management System - Activity Diagram with Swimlanes
+
+|Patient|
+start
+:Register / Login;
+:Book appointment;
+
+|Hospital Management System|
+:Validate patient information;
+:Check doctor availability;
+:Create appointment record;
+
+|Notification Service|
+:Send appointment confirmation;
+
+|Doctor|
+:View appointment schedule;
+:Open patient medical history;
+:Examine patient;
+:Enter diagnosis;
+
+if (Tests required?) then (Yes)
+
+  |Doctor|
+  :Request lab / radiology tests;
+
+  |Hospital Management System|
+  :Send test request to department;
+
+  |Laboratory Staff|
+  :Perform laboratory test;
+  :Upload lab results;
+
+  |Radiology Staff|
+  :Perform radiology scan;
+  :Upload radiology report;
+
+  |Hospital Management System|
+  :Attach diagnostic results\nto patient medical record;
+
+  |Doctor|
+  :Review diagnostic results;
+
+else (No)
+    |Doctor|
+    :Continue without diagnostic tests;
+endif
+
+|Doctor|
+:Write prescription;
+:Update medical record;
+
+|Pharmacist|
+:View prescription;
+:Dispense medication;
+
+|Billing Officer|
+:Generate invoice;
+:Record payment status;
+
+|Patient|
+:View medical report;
+:View billing details;
+
+stop
+@enduml
