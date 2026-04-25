@@ -1,0 +1,61 @@
+@startuml
+title Sequence Diagram - High-Level: Hospital Management Workflow
+
+actor Patient as patient
+actor Doctor as doctor
+actor "Administrative Staff" as admin
+actor "Laboratory / Radiology Staff" as dept
+actor Pharmacist as pharmacist
+actor "Billing Officer" as billing
+
+participant "Hospital Management System" as hms
+participant "Notification Service" as notif
+
+patient -> hms : Register / Login
+hms --> patient : Account access confirmed
+
+patient -> hms : Book appointment
+hms -> hms : Check doctor availability
+hms -> hms : Create appointment record
+
+hms -> notif : Send appointment confirmation
+notif --> patient : Appointment confirmation
+
+doctor -> hms : View appointment schedule
+hms --> doctor : Return appointment details
+
+doctor -> hms : Open patient medical record
+hms --> doctor : Return patient history
+
+doctor -> hms : Enter diagnosis
+
+alt Diagnostic tests required
+    doctor -> hms : Request lab / radiology tests
+    hms -> dept : Forward test request
+
+    dept -> hms : Upload diagnostic results
+    hms -> notif : Notify doctor that results are available
+    notif --> doctor : Results available notification
+
+    doctor -> hms : Review diagnostic results
+else No diagnostic tests required
+    doctor -> hms : Continue treatment without tests
+end
+
+doctor -> hms : Write prescription
+hms -> pharmacist : Send prescription
+
+pharmacist -> hms : Process prescription
+hms --> pharmacist : Prescription status updated
+
+billing -> hms : Generate invoice
+hms -> hms : Calculate charges
+hms --> billing : Invoice created
+
+billing -> hms : Record payment
+hms --> billing : Payment status updated
+
+patient -> hms : View medical report and billing details
+hms --> patient : Display report and billing information
+
+@enduml
