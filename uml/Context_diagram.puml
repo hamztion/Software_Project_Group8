@@ -1,0 +1,32 @@
+@startuml
+title Hospital Management System - C4 Level 1 Context Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam rectangle {
+  RoundCorner 15
+}
+skinparam actor {
+  BorderColor black
+}
+
+actor "Patient" as patient
+actor "Doctor" as doctor
+actor "Administrative Staff" as admin
+actor "Billing Officer" as billing
+actor "Laboratory Staff" as lab
+actor "Radiology Staff" as radiology
+actor "Pharmacist" as pharmacy
+
+rectangle "Hospital Management System\n\nManages patient registration,\nappointment scheduling, billing,\nmedical records, prescriptions,\ndiagnostic results, and departmental coordination" as hms
+
+patient --> hms : Registers, books appointments,\nand accesses medical reports
+doctor --> hms : Views patient records,\nwrites prescriptions,\nand reviews diagnostic results
+admin --> hms : Manages registration,\nappointments, and hospital operations
+billing --> hms : Creates invoices\nand records payments
+lab --> hms : Uploads laboratory\ntest results
+radiology --> hms : Uploads radiology reports
+pharmacy --> hms : Receives and processes\nprescriptions
+
+@enduml
