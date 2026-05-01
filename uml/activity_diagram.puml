@@ -3,7 +3,7 @@ title Hospital Management System - Activity Diagram with Swimlanes
 
 |Patient|
 start
-:Register / Login;
+:Register Account;
 :Book appointment;
 
 |Hospital Management System|
@@ -23,18 +23,14 @@ start
 if (Tests required?) then (Yes)
 
   |Doctor|
-  :Request lab / radiology tests;
+  :Request diagnostic test;
 
   |Hospital Management System|
   :Send test request to department;
 
-  |Laboratory Staff|
-  :Perform laboratory test;
-  :Upload lab results;
-
-  |Radiology Staff|
-  :Perform radiology scan;
-  :Upload radiology report;
+  |Laboratory / Radiology Staff|
+  :Perform requested diagnostic test;
+  :Upload diagnostic result;
 
   |Hospital Management System|
   :Attach diagnostic results\nto patient medical record;
@@ -43,8 +39,8 @@ if (Tests required?) then (Yes)
   :Review diagnostic results;
 
 else (No)
-    |Doctor|
-    :Continue without diagnostic tests;
+  |Doctor|
+  :Continue without diagnostic tests;
 endif
 
 |Doctor|
