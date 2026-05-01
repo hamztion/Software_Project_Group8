@@ -18,6 +18,7 @@ actor "Billing Officer" as billing
 actor "Laboratory Staff" as lab
 actor "Radiology Staff" as radiology
 actor "Pharmacist" as pharmacy
+actor "Inpatient Ward Staff" as ward
 
 rectangle "Hospital Management System\n\nManages patient registration,\nappointment scheduling, billing,\nmedical records, prescriptions,\ndiagnostic results, and departmental coordination" as hms
 
@@ -28,5 +29,6 @@ billing --> hms : Creates invoices\nand records payments
 lab --> hms : Uploads laboratory\ntest results
 radiology --> hms : Uploads radiology reports
 pharmacy --> hms : Receives and processes\nprescriptions
+ward --> hms : Manages admitted patient records\nand inpatient care information
 
 @enduml
