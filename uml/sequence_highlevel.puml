@@ -3,59 +3,95 @@ title Sequence Diagram - High-Level: Hospital Management Workflow
 
 actor Patient as patient
 actor Doctor as doctor
-actor "Administrative Staff" as admin
 actor "Laboratory / Radiology Staff" as dept
 actor Pharmacist as pharmacist
 actor "Billing Officer" as billing
 
 participant "Hospital Management System" as hms
+database "Centralized Database" as db
 participant "Notification Service" as notif
 
-patient -> hms : Register / Login
-hms --> patient : Account access confirmed
+patient -> hms : Register account
+hms -> db : Store patient demographics
+db --> hms : Patient profile saved
+hms --> patient : Account created
 
 patient -> hms : Book appointment
-hms -> hms : Check doctor availability
-hms -> hms : Create appointment record
+hms -> db : Validate patient information
+db --> hms : Patient information returned
+hms -> db : Check doctor availability
+db --> hms : Available slots returned
+hms -> db : Create appointment record
+db --> hms : Appointment saved
 
 hms -> notif : Send appointment confirmation
 notif --> patient : Appointment confirmation
 
 doctor -> hms : View appointment schedule
+hms -> db : Retrieve appointment details
+db --> hms : Appointment details returned
 hms --> doctor : Return appointment details
 
 doctor -> hms : Open patient medical record
+hms -> db : Retrieve patient history
+db --> hms : Patient history returned
 hms --> doctor : Return patient history
 
 doctor -> hms : Enter diagnosis
+hms -> db : Update medical record with diagnosis
+db --> hms : Diagnosis saved
 
 alt Diagnostic tests required
-    doctor -> hms : Request lab / radiology tests
+    doctor -> hms : Request diagnostic test
+    hms -> db : Store diagnostic test request
     hms -> dept : Forward test request
 
-    dept -> hms : Upload diagnostic results
-    hms -> notif : Notify doctor that results are available
-    notif --> doctor : Results available notification
+    dept -> hms : Upload diagnostic result
+    hms -> db : Attach result to patient medical record
+    db --> hms : Diagnostic result saved
 
     doctor -> hms : Review diagnostic results
+    hms -> db : Retrieve diagnostic results
+    db --> hms : Diagnostic results returned
+    hms --> doctor : Display diagnostic results
 else No diagnostic tests required
     doctor -> hms : Continue treatment without tests
 end
 
 doctor -> hms : Write prescription
+hms -> db : Store prescription
+db --> hms : Prescription saved
 hms -> pharmacist : Send prescription
 
-pharmacist -> hms : Process prescription
+pharmacist -> hms : View prescription
+hms -> db : Retrieve prescription details
+db --> hms : Prescription details returned
+
+pharmacist -> hms : Dispense medication
+hms -> db : Update prescription status
+db --> hms : Prescription status saved
 hms --> pharmacist : Prescription status updated
 
 billing -> hms : Generate invoice
-hms -> hms : Calculate charges
+hms -> db : Retrieve appointment, treatment,\nand prescription details
+db --> hms : Billing data returned
+hms -> db : Store invoice
+db --> hms : Invoice saved
 hms --> billing : Invoice created
 
 billing -> hms : Record payment
+hms -> db : Update payment status
+db --> hms : Payment status saved
 hms --> billing : Payment status updated
 
-patient -> hms : View medical report and billing details
-hms --> patient : Display report and billing information
+patient -> hms : View medical report
+hms -> db : Retrieve medical report
+db --> hms : Medical report returned
+hms --> patient : Display medical report
+
+patient -> hms : View billing details
+hms -> db : Retrieve billing information
+db --> hms : Billing information returned
+hms --> patient : Display billing information
 
 @enduml
