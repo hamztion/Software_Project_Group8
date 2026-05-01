@@ -1,0 +1,87 @@
+@startuml
+title Hospital Management System - DFD Level 1
+
+left to right direction
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam rectangle {
+  RoundCorner 15
+  BorderColor black
+}
+skinparam database {
+  BorderColor black
+}
+
+' External Entities
+rectangle "Patient" as Patient
+rectangle "Doctor" as Doctor
+rectangle "Administrative Staff" as Admin
+rectangle "Laboratory / Radiology Staff" as Dept
+rectangle "Pharmacist" as Pharmacist
+rectangle "Billing Officer" as Billing
+rectangle "Notification Service" as Notification
+
+' Processes
+rectangle "1.0\nPatient Registration\nand Appointment Booking" as P1
+rectangle "2.0\nMedical Record\nManagement" as P2
+rectangle "3.0\nDiagnostic Test\nManagement" as P3
+rectangle "4.0\nPrescription and Pharmacy\nManagement" as P4
+rectangle "5.0\nBilling and Payment\nManagement" as P5
+
+' Data Stores
+database "D1\nPatient Data" as D1
+database "D2\nAppointment Data" as D2
+database "D3\nMedical Records" as D3
+database "D4\nDepartment Reports" as D4
+database "D5\nPrescription Data" as D5
+database "D6\nBilling Data" as D6
+
+' Patient Registration and Appointments
+Patient --> P1 : Registration details\nAppointment request
+P1 --> D1 : Store / update patient data
+P1 --> D2 : Store appointment record
+P1 --> Notification : Appointment confirmation request
+Notification --> Patient : Appointment confirmation
+P1 --> Patient : Booking status
+
+Admin --> P1 : Patient / appointment updates
+P1 --> Admin : Updated appointment information
+
+' Medical Record Management
+Doctor --> P2 : Diagnosis and treatment notes
+P2 --> D3 : Store / update medical record
+P2 --> Doctor : Patient record information
+D3 --> P2 : Patient history
+
+' Diagnostic Test Management
+Doctor --> P3 : Diagnostic test request
+P3 --> D4 : Store test request
+P3 --> Dept : Test request details
+Dept --> P3 : Lab result / radiology report
+P3 --> D4 : Store department report
+P3 --> D3 : Attach result to medical record
+P3 --> Notification : Result availability notification
+Notification --> Doctor : Result available alert
+
+' Prescription and Pharmacy Management
+Doctor --> P4 : Prescription details
+P4 --> D5 : Store prescription
+P4 --> Pharmacist : Prescription information
+Pharmacist --> P4 : Processing / dispensing update
+P4 --> D5 : Update prescription status
+P4 --> D3 : Attach prescription to medical record
+
+' Billing and Payment Management
+Billing --> P5 : Invoice / payment details
+P5 --> D2 : Retrieve appointment data
+P5 --> D3 : Retrieve treatment data
+P5 --> D5 : Retrieve prescription data
+P5 --> D6 : Store invoice and payment status
+P5 --> Notification : Billing notification request
+Notification --> Patient : Billing notification
+Patient --> P5 : View billing details
+P5 --> Patient : Billing information
+
+@enduml
