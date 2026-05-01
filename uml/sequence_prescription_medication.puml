@@ -1,0 +1,74 @@
+@startuml
+title Detailed Sequence Diagram - UC3: Prescription and Medication Dispensing
+
+actor Doctor as doctor
+actor Pharmacist as pharmacist
+
+participant "Web / Mobile Portal" as portal
+participant "Backend API" as api
+database "Centralized Database" as db
+
+doctor -> portal : Open patient medical record
+portal -> api : Request patient medical record
+
+api -> db : Retrieve patient medical record
+db --> api : Patient record returned
+
+api --> portal : Send patient medical record
+portal --> doctor : Display patient medical record
+
+doctor -> portal : Write prescription
+portal -> api : Submit prescription details
+
+api -> db : Store prescription in patient record
+db --> api : Prescription saved
+
+api --> portal : Prescription created successfully
+portal --> doctor : Display prescription confirmation
+
+pharmacist -> portal : View pending prescriptions
+portal -> api : Request pending prescriptions
+
+api -> db : Retrieve pending prescriptions
+db --> api : Pending prescriptions returned
+
+api --> portal : Send pending prescriptions
+portal --> pharmacist : Display prescription list
+
+pharmacist -> portal : Select prescription
+portal -> api : Request prescription details
+
+api -> db : Retrieve prescription details
+db --> api : Prescription details returned
+
+api --> portal : Send prescription details
+portal --> pharmacist : Display prescription details
+
+pharmacist -> portal : Process prescription
+portal -> api : Submit prescription processing status
+
+api -> db : Update prescription status
+db --> api : Prescription status saved
+
+alt Medication available
+    pharmacist -> portal : Dispense medication
+    portal -> api : Submit dispensing update
+
+    api -> db : Mark medication as dispensed
+    db --> api : Dispensing status saved
+
+    api --> portal : Dispensing completed
+    portal --> pharmacist : Display dispensing confirmation
+
+else Medication unavailable
+    pharmacist -> portal : Mark medication unavailable
+    portal -> api : Submit unavailable status
+
+    api -> db : Update prescription as unavailable
+    db --> api : Unavailable status saved
+
+    api --> portal : Medication unavailable status updated
+    portal --> pharmacist : Display unavailable confirmation
+end
+
+@enduml
