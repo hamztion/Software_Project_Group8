@@ -12,65 +12,64 @@ actor "Billing Officer" as Billing
 actor "Laboratory Staff" as Lab
 actor "Radiology Staff" as Radiology
 actor Pharmacist
+actor "Inpatient Ward Staff" as Ward
 
 rectangle "Hospital Management System" {
 
   usecase "Register Account" as UC1
-  usecase "Login" as UC2
-  usecase "Book Appointment" as UC3
-  usecase "View Medical Reports" as UC4
-  usecase "View Billing Details" as UC5
+  usecase "Book Appointment" as UC2
+  usecase "View Medical Reports" as UC3
+  usecase "View Billing Details" as UC4
 
-  usecase "Manage Appointments" as UC6
-  usecase "Access Patient Record" as UC7
-  usecase "Update Medical Record" as UC8
-  usecase "Write Prescription" as UC9
-  usecase "Review Diagnostic Results" as UC10
-  usecase "Request Lab Test" as UC11
-  usecase "Request Radiology Test" as UC12
+  usecase "Manage Appointments" as UC5
+  usecase "Access Patient Record" as UC6
+  usecase "Update Medical Record" as UC7
+  usecase "Write Prescription" as UC8
+  usecase "Review Diagnostic Results" as UC9
+  usecase "Request Lab Test" as UC10
+  usecase "Request Radiology Test" as UC11
 
-  usecase "Register Patient" as UC13
-  usecase "Manage Patient Information" as UC14
+  usecase "Register Patient" as UC12
+  usecase "Manage Patient Information" as UC13
 
-  usecase "Upload Lab Results" as UC15
-  usecase "Upload Radiology Report" as UC16
+  usecase "Upload Lab Results" as UC14
+  usecase "Upload Radiology Report" as UC15
 
-  usecase "Process Prescription" as UC17
-  usecase "Dispense Medication" as UC18
+  usecase "Process Prescription" as UC16
+  usecase "Dispense Medication" as UC17
 
-  usecase "Generate Invoice" as UC19
-  usecase "Record Payment" as UC20
+  usecase "Generate Invoice" as UC18
+  usecase "Record Payment" as UC19
+
+  usecase "Manage Inpatient Records" as UC20
 }
 
 Patient --> UC1
 Patient --> UC2
 Patient --> UC3
 Patient --> UC4
-Patient --> UC5
 
+Doctor --> UC5
 Doctor --> UC6
 Doctor --> UC7
 Doctor --> UC8
 Doctor --> UC9
 Doctor --> UC10
 Doctor --> UC11
-Doctor --> UC12
 
+Admin --> UC12
 Admin --> UC13
-Admin --> UC14
-Admin --> UC6
+Admin --> UC5
 
-Lab --> UC15
-Radiology --> UC16
+Lab --> UC14
+Radiology --> UC15
 
+Pharmacist --> UC16
 Pharmacist --> UC17
-Pharmacist --> UC18
 
+Billing --> UC18
 Billing --> UC19
-Billing --> UC20
 
-UC11 ..> UC10 : <<include>>
-UC12 ..> UC10 : <<include>>
-UC17 ..> UC18 : <<include>>
+Ward --> UC20
 
 @enduml
