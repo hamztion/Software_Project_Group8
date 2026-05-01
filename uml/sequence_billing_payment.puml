@@ -1,0 +1,36 @@
+@startuml
+title Detailed Sequence Diagram - UC4: Billing and Payment
+
+actor "Billing Officer" as billing
+actor Patient as patient
+participant "Web / Mobile Portal" as portal
+participant "Backend API" as api
+database "Centralized Database" as db
+participant "Notification Service" as notif
+
+billing -> portal : Generate invoice
+portal -> api : Submit invoice request
+api -> db : Retrieve billing data
+db --> api : Billing data returned
+api -> db : Save invoice
+db --> api : Invoice saved
+api -> notif : Send billing notification
+notif --> patient : Billing notification
+api --> portal : Return invoice details
+portal --> billing : Display generated invoice
+
+billing -> portal : Record payment
+portal -> api : Submit payment details
+api -> db : Update payment status
+db --> api : Payment status updated
+api --> portal : Return payment confirmation
+portal --> billing : Display payment confirmation
+
+patient -> portal : View billing details
+portal -> api : Request billing information
+api -> db : Retrieve billing information
+db --> api : Billing information returned
+api --> portal : Return billing details
+portal --> patient : Display billing details
+
+@enduml

@@ -1,0 +1,34 @@
+@startuml
+title Detailed Sequence Diagram - UC1: Book Appointment
+
+actor Patient as patient
+participant "Web / Mobile Portal" as portal
+participant "Backend API" as api
+database "Centralized Database" as db
+participant "Notification Service" as notif
+
+patient -> portal : Book appointment
+portal -> api : Submit appointment request
+
+api -> db : Validate patient information
+db --> api : Patient data returned
+
+api -> db : Check doctor availability
+db --> api : Available slots returned
+
+alt Slot available
+    api -> db : Save appointment record
+    db --> api : Appointment saved
+
+    api -> notif : Send appointment confirmation
+    notif --> patient : Appointment confirmation
+
+    api --> portal : Return booking confirmation
+    portal --> patient : Display booking confirmation
+
+else Slot unavailable
+    api --> portal : Return unavailable slot message
+    portal --> patient : Display alternative slots
+end
+
+@enduml

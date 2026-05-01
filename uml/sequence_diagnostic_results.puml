@@ -3,57 +3,37 @@ title Detailed Sequence Diagram - UC2: Diagnostic Test Request and Result Review
 
 actor Doctor as doctor
 actor "Laboratory / Radiology Staff" as dept
-
 participant "Web / Mobile Portal" as portal
 participant "Backend API" as api
 database "Centralized Database" as db
 participant "Notification Service" as notif
 
 doctor -> portal : Open patient medical record
-portal -> api : Request patient history
+portal -> api : Request patient record
+api -> db : Retrieve patient record
+db --> api : Patient record returned
+api --> portal : Return patient record
+portal --> doctor : Display patient record
 
-api -> db : Retrieve patient medical record
-db --> api : Patient history returned
+doctor -> portal : Request diagnostic test
+portal -> api : Submit test request
+api -> db : Save test request
+db --> api : Test request saved
+api -> dept : Forward test request
 
-api --> portal : Send patient history
-portal --> doctor : Display patient medical record
+dept -> portal : Upload diagnostic result
+portal -> api : Submit diagnostic result
+api -> db : Save diagnostic result
+db --> api : Diagnostic result saved
 
-doctor -> portal : Enter diagnosis
-portal -> api : Submit diagnosis
+api -> notif : Notify doctor of result availability
+notif --> doctor : Result available notification
 
-api -> db : Update medical record with diagnosis
-db --> api : Diagnosis saved
-
-alt Diagnostic test required
-    doctor -> portal : Request diagnostic test
-    portal -> api : Submit diagnostic test request
-
-    api -> db : Store diagnostic test request
-    db --> api : Test request saved
-
-    api -> dept : Forward diagnostic test request
-    dept --> api : Test request received
-
-    dept -> portal : Upload diagnostic result
-    portal -> api : Submit diagnostic result
-
-    api -> db : Attach diagnostic result to patient record
-    db --> api : Diagnostic result saved
-
-    api -> notif : Notify doctor that results are available
-    notif --> doctor : Diagnostic result available
-
-    doctor -> portal : Review diagnostic results
-    portal -> api : Request diagnostic results
-
-    api -> db : Retrieve diagnostic results
-    db --> api : Diagnostic results returned
-
-    api --> portal : Send diagnostic results
-    portal --> doctor : Display diagnostic results
-
-else No diagnostic test required
-    doctor -> portal : Continue treatment without test request
-end
+doctor -> portal : Review diagnostic results
+portal -> api : Request diagnostic results
+api -> db : Retrieve diagnostic results
+db --> api : Diagnostic results returned
+api --> portal : Return diagnostic results
+portal --> doctor : Display diagnostic results
 
 @enduml
