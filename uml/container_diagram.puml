@@ -1,6 +1,8 @@
 @startuml
 title Hospital Management System - C4 Level 2 Container Diagram
 
+top to bottom direction
+
 skinparam backgroundColor white
 skinparam shadowing false
 skinparam defaultTextAlignment center
@@ -22,6 +24,7 @@ actor "Billing Officer" as billing
 actor "Laboratory Staff" as lab
 actor "Radiology Staff" as radiology
 actor "Pharmacist" as pharmacy
+actor "Inpatient Ward Staff" as ward
 
 rectangle "Hospital Management System" as hms {
 
@@ -31,8 +34,20 @@ rectangle "Hospital Management System" as hms {
 
   database "Centralized Database\n\n[Relational Database]\nStores patient demographics, appointments, medical records, prescriptions, billing data, and departmental reports" as db
 
-  rectangle "Notification Service\n\n[Email / SMS Service]\nSends appointment confirmations, report alerts, and billing notifications" as notif
+  rectangle "Notification Service\n\n[Internal Service]\nSends appointment confirmations, report alerts, and billing notifications" as notif
+
+  portal -[hidden]down- api
+  api -[hidden]down- db
+  db -[hidden]right- notif
 }
+
+patient -[hidden]right- doctor
+doctor -[hidden]right- admin
+admin -[hidden]right- billing
+billing -[hidden]right- lab
+lab -[hidden]right- radiology
+radiology -[hidden]right- pharmacy
+pharmacy -[hidden]right- ward
 
 patient --> portal : Uses
 doctor --> portal : Uses
@@ -41,12 +56,12 @@ billing --> portal : Uses
 lab --> portal : Uses
 radiology --> portal : Uses
 pharmacy --> portal : Uses
+ward --> portal : Uses
 
 portal --> api : Sends requests to
 api --> db : Reads / writes data
 api --> notif : Triggers notifications
 
 notif --> patient : Appointment / report alerts
-notif --> doctor : Patient update alerts
 
 @enduml
