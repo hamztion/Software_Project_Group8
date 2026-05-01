@@ -1,18 +1,62 @@
-# Use Case Descriptions - Hospital Management System
+# Selected Use Case Descriptions - Hospital Management System
 
-| Use Case | Actor | Goal | Preconditions | Main Flow | Alternative Flow | Postcondition |
-|---|---|---|---|---|---|---|
-| Register Account | Patient | Allow a new patient to create an account in the system | Patient is not already registered | Patient enters personal information → System validates data → System creates patient account | If information is incomplete or invalid, the system asks the patient to correct it | Patient account is created |
-| Login | Patient / Staff | Allow users to access the system securely | User already has an account | User enters username/email and password → System verifies credentials → User enters the system | If credentials are incorrect, the system displays an error message | User is logged in |
-| Book Appointment | Patient | Allow a patient to book an appointment with a doctor | Patient is logged in | Patient selects doctor/specialty → Chooses date and time → System checks availability → Appointment is confirmed | If no slot is available, patient selects another time | Appointment is saved in the system |
-| Manage Appointments | Administrative Staff / Doctor | View, schedule, update, or cancel appointments | User is logged in and authorized | User opens appointment list → Selects appointment → Updates schedule/status if needed → System saves changes | If selected time is unavailable, system asks for another time | Appointment record is updated |
-| Access Patient Record | Doctor | Allow the doctor to view patient history and previous reports | Doctor is logged in and patient record exists | Doctor searches/selects patient → System displays medical history, reports, and previous prescriptions | If record is not found, system displays a message | Doctor can review patient information |
-| Update Medical Record | Doctor | Store new diagnosis, notes, and treatment details | Doctor has examined the patient | Doctor opens patient record → Enters diagnosis and notes → System saves the updated record | If required fields are missing, system asks the doctor to complete them | Patient medical record is updated |
-| Request Diagnostic Test | Doctor | Request lab or radiology tests for a patient | Patient record is open and doctor is authorized | Doctor selects required test → System sends request to lab/radiology department → Department receives request | If test type is unavailable, doctor selects another test | Diagnostic test request is created |
-| Upload Diagnostic Results | Laboratory / Radiology Staff | Add lab or radiology results to the patient record | Test request exists | Staff opens assigned request → Performs test/scan → Uploads results → System attaches results to patient record | If upload fails, staff retries or contacts admin | Results become available to the doctor |
-| Write Prescription | Doctor | Create a prescription for the patient | Patient has been examined | Doctor selects medication → Enters dosage and instructions → System saves prescription | If medication information is incomplete, system requests correction | Prescription is saved and available to pharmacy |
-| Process Prescription | Pharmacist | Prepare and dispense medication based on the prescription | Prescription exists in the system | Pharmacist views prescription → Checks medication availability → Prepares medication → Marks prescription as processed | If medicine is unavailable, pharmacist updates status | Prescription status is updated |
-| Generate Invoice | Billing Officer | Create billing record for services provided | Appointment/service/test/prescription exists | Billing officer reviews services → System calculates charges → Invoice is generated | If billing data is incomplete, system requests correction | Invoice is created |
-| Record Payment | Billing Officer | Update payment status after patient payment | Invoice exists | Billing officer receives payment → Selects invoice → Records payment → System updates payment status | If payment is partial, system records partial status | Billing record is updated |
-| View Medical Reports | Patient | Allow patient to access completed medical reports | Patient is logged in and reports are available | Patient opens reports section → System displays available reports → Patient views report | If no report is available, system displays a message | Patient views medical report |
-| View Billing Details | Patient | Allow patient to view invoice and payment status | Patient is logged in | Patient opens billing section → System displays invoices and payment status | If no bill exists, system displays no billing record | Patient views billing information |
+The following tables describe the four major use cases selected for detailed sequence modeling: Book Appointment, Diagnostic Test Request and Result Review, Prescription and Medication Dispensing, and Billing and Payment.
+
+---
+
+## UC1: Book Appointment
+
+| Field | Description |
+|---|---|
+| **Use Case Name** | Book Appointment |
+| **Primary Actor** | Patient |
+| **Goal** | Allow a patient to book an appointment with a doctor through the hospital system. |
+| **Preconditions** | Patient is registered/authenticated. Doctor schedule exists in the system. |
+| **Main Flow** | 1. Patient selects the book appointment option. <br> 2. Patient enters appointment details such as doctor/specialty, date, and time. <br> 3. System validates patient information. <br> 4. System checks doctor availability. <br> 5. System saves the appointment record. <br> 6. System sends an appointment confirmation notification. <br> 7. Patient receives booking confirmation. |
+| **Alternative Flow** | If the selected slot is unavailable, the system displays alternative available slots and asks the patient to choose another time. |
+| **Postcondition** | Appointment is saved in the centralized database and confirmation is sent to the patient. |
+
+---
+
+## UC2: Diagnostic Test Request and Result Review
+
+| Field | Description |
+|---|---|
+| **Use Case Name** | Diagnostic Test Request and Result Review |
+| **Primary Actor** | Doctor |
+| **Supporting Actor(s)** | Laboratory Staff / Radiology Staff |
+| **Goal** | Allow the doctor to request diagnostic tests and review uploaded lab or radiology results. |
+| **Preconditions** | Patient medical record exists. Doctor is authorized to access the patient record. |
+| **Main Flow** | 1. Doctor opens the patient medical record. <br> 2. System retrieves and displays the patient record. <br> 3. Doctor requests a diagnostic test. <br> 4. System saves the test request. <br> 5. System forwards the request to laboratory or radiology staff. <br> 6. Laboratory/radiology staff uploads the diagnostic result. <br> 7. System saves the result in the patient medical record. <br> 8. System notifies the doctor that results are available. <br> 9. Doctor reviews the diagnostic results. |
+| **Alternative Flow** | If diagnostic results are not uploaded yet, the system displays the test status as pending. |
+| **Postcondition** | Diagnostic results are stored in the patient medical record and become available for doctor review. |
+
+---
+
+## UC3: Prescription and Medication Dispensing
+
+| Field | Description |
+|---|---|
+| **Use Case Name** | Prescription and Medication Dispensing |
+| **Primary Actor** | Doctor |
+| **Supporting Actor(s)** | Pharmacist |
+| **Goal** | Allow the doctor to write a prescription and allow the pharmacist to process and dispense medication. |
+| **Preconditions** | Patient has been examined. Patient medical record exists. |
+| **Main Flow** | 1. Doctor writes a prescription through the system. <br> 2. System saves the prescription in the patient record. <br> 3. Pharmacist views the prescription. <br> 4. System retrieves prescription details. <br> 5. Pharmacist processes the prescription. <br> 6. System updates the prescription status. <br> 7. Pharmacist dispenses the medication. <br> 8. System records the dispensing status. |
+| **Alternative Flow** | If medication is unavailable, the pharmacist updates the prescription status as unavailable. |
+| **Postcondition** | Prescription and dispensing status are updated in the centralized database. |
+
+---
+
+## UC4: Billing and Payment
+
+| Field | Description |
+|---|---|
+| **Use Case Name** | Billing and Payment |
+| **Primary Actor** | Billing Officer |
+| **Supporting Actor(s)** | Patient |
+| **Goal** | Allow the billing officer to generate invoices and record payments, and allow the patient to view billing details. |
+| **Preconditions** | Patient has received hospital services such as appointment, treatment, test, or prescription. |
+| **Main Flow** | 1. Billing officer generates an invoice. <br> 2. System retrieves billing data from the centralized database. <br> 3. System saves the invoice. <br> 4. System sends a billing notification to the patient. <br> 5. Billing officer records payment details. <br> 6. System updates payment status. <br> 7. Patient views billing details through the portal. <br> 8. System displays invoice and payment information. |
+| **Alternative Flow** | If payment is partial, the system records the payment as partially paid. If no billing record exists, the system displays that no billing information is available. |
+| **Postcondition** | Invoice and payment status are saved in the centralized database and can be viewed by the patient. |
