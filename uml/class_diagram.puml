@@ -1,0 +1,183 @@
+@startuml
+title Hospital Management System - Class Diagram
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam defaultTextAlignment center
+
+' =========================
+' Users and Staff
+' =========================
+
+abstract class User {
+  - userId: int
+  - name: String
+  - email: String
+  - phone: String
+  + updateProfile(): void
+}
+
+class Patient {
+  - patientId: int
+  - dateOfBirth: Date
+  - address: String
+  + registerAccount(): void
+  + bookAppointment(): void
+  + viewReports(): void
+  + viewBilling(): void
+}
+
+abstract class Staff {
+  - staffId: int
+  - role: String
+  + accessSystem(): void
+}
+
+class Doctor {
+  - specialization: String
+  + viewPatientRecord(): void
+  + writePrescription(): void
+  + requestDiagnosticTest(): void
+}
+
+class AdministrativeStaff {
+  + registerPatient(): void
+  + manageAppointments(): void
+}
+
+class BillingOfficer {
+  + generateInvoice(): void
+  + recordPayment(): void
+}
+
+class DepartmentStaff {
+  - departmentName: String
+  + uploadDepartmentReport(): void
+}
+
+class Pharmacist {
+  + processPrescription(): void
+  + dispenseMedication(): void
+}
+
+class InpatientWardStaff {
+  + manageInpatientRecord(): void
+}
+
+' =========================
+' Main Hospital Records
+' =========================
+
+class Appointment {
+  - appointmentId: int
+  - dateTime: DateTime
+  - status: String
+  + schedule(): void
+  + cancel(): void
+}
+
+class MedicalRecord {
+  - recordId: int
+  - lastUpdated: Date
+  + updateRecord(): void
+  + attachResult(): void
+}
+
+class DiagnosticTest {
+  - testId: int
+  - testType: String
+  - status: String
+  + requestTest(): void
+  + uploadResult(): void
+}
+
+class Prescription {
+  - prescriptionId: int
+  - medicationName: String
+  - dosage: String
+  - status: String
+  + createPrescription(): void
+  + updateStatus(): void
+}
+
+class Invoice {
+  - invoiceId: int
+  - totalAmount: double
+  - status: String
+  + calculateTotal(): double
+  + markAsPaid(): void
+}
+
+class Payment {
+  - paymentId: int
+  - amount: double
+  - method: String
+  + recordPayment(): void
+}
+
+class InpatientRecord {
+  - admissionId: int
+  - bedNumber: String
+  - careNotes: String
+  + updateCareStatus(): void
+}
+
+class Department {
+  - departmentId: int
+  - name: String
+  + assignStaff(): void
+}
+
+' =========================
+' Generalization / Inheritance
+' =========================
+
+User <|-- Patient
+User <|-- Staff
+
+Staff <|-- Doctor
+Staff <|-- AdministrativeStaff
+Staff <|-- BillingOfficer
+Staff <|-- DepartmentStaff
+Staff <|-- Pharmacist
+Staff <|-- InpatientWardStaff
+
+' =========================
+' Associations
+' =========================
+
+Patient "1" -- "0..*" Appointment : books
+Doctor "1" -- "0..*" Appointment : attends
+AdministrativeStaff "1" -- "0..*" Appointment : manages
+
+Doctor "1" -- "0..*" DiagnosticTest : requests
+DepartmentStaff "1" -- "0..*" DiagnosticTest : handles
+
+Doctor "1" -- "0..*" Prescription : writes
+Pharmacist "1" -- "0..*" Prescription : processes
+
+BillingOfficer "1" -- "0..*" Invoice : generates
+Patient "1" -- "0..*" Invoice : receives
+
+InpatientWardStaff "1" -- "0..*" InpatientRecord : manages
+
+' =========================
+' Composition
+' Strong ownership
+' =========================
+
+Patient "1" *-- "1" MedicalRecord : owns
+MedicalRecord "1" *-- "0..*" DiagnosticTest : contains
+MedicalRecord "1" *-- "0..*" Prescription : contains
+MedicalRecord "1" *-- "0..*" InpatientRecord : contains
+Invoice "1" *-- "0..*" Payment : has
+
+' =========================
+' Aggregation
+' Department can exist without staff
+' =========================
+
+Department "1" o-- "0..*" Staff : includes
+
+@enduml
