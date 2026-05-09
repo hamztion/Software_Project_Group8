@@ -7,30 +7,72 @@ participant "Web / Mobile Portal" as portal
 participant "Backend API" as api
 database "Centralized Database" as db
 
-doctor -> portal : Write prescription
-portal -> api : Submit prescription details
-api -> db : Save prescription
-db --> api : Prescription saved
-api --> portal : Return prescription confirmation
+doctor -> portal : Write prescription(patientId, medicationName, dosage, instructions)
+activate portal
+
+portal -> api : submitPrescription(patientId, doctorId, medicationName, dosage, instructions)
+activate api
+
+api -> db : savePrescription(patientId, doctorId, medicationName, dosage, instructions, status="Created")
+activate db
+db --> api : prescriptionSaved(prescriptionId)
+deactivate db
+
+api --> portal : prescriptionConfirmation(prescriptionId, status)
+deactivate api
+
 portal --> doctor : Display prescription confirmation
+deactivate portal
 
-pharmacist -> portal : View prescription
-portal -> api : Request prescription details
-api -> db : Retrieve prescription details
-db --> api : Prescription details returned
-api --> portal : Return prescription details
+pharmacist -> portal : View prescription(prescriptionId)
+activate portal
+
+portal -> api : getPrescriptionDetails(prescriptionId)
+activate api
+
+api -> db : retrievePrescription(prescriptionId)
+activate db
+db --> api : prescriptionDetails
+deactivate db
+
+api --> portal : returnPrescriptionDetails(prescriptionDetails)
+deactivate api
+
 portal --> pharmacist : Display prescription details
+deactivate portal
 
-pharmacist -> portal : Process prescription
-portal -> api : Submit processing update
-api -> db : Update prescription status
-db --> api : Status updated
+pharmacist -> portal : Process prescription(prescriptionId)
+activate portal
 
-pharmacist -> portal : Dispense medication
-portal -> api : Submit dispensing update
-api -> db : Record medication dispensing
-db --> api : Dispensing recorded
-api --> portal : Return dispensing confirmation
+portal -> api : updatePrescriptionStatus(prescriptionId, status="Processed")
+activate api
+
+api -> db : updatePrescriptionStatus(prescriptionId, status="Processed")
+activate db
+db --> api : statusUpdated
+deactivate db
+
+api --> portal : processingConfirmation(prescriptionId, status)
+deactivate api
+
+portal --> pharmacist : Display processing confirmation
+deactivate portal
+
+pharmacist -> portal : Dispense medication(prescriptionId)
+activate portal
+
+portal -> api : recordMedicationDispensing(prescriptionId, pharmacistId, dispensingStatus="Dispensed")
+activate api
+
+api -> db : saveDispensingRecord(prescriptionId, pharmacistId, dispensingStatus, dispensedAt)
+activate db
+db --> api : dispensingRecorded
+deactivate db
+
+api --> portal : dispensingConfirmation(prescriptionId, dispensingStatus)
+deactivate api
+
 portal --> pharmacist : Display dispensing confirmation
+deactivate portal
 
 @enduml

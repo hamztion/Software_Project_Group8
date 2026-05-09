@@ -21,7 +21,7 @@ rectangle "Hospital Management System" {
   usecase "View Medical Reports" as UC3
   usecase "View Billing Details" as UC4
 
-  usecase "Manage Appointments" as UC5
+  usecase "View Appointment Schedule" as UC5
   usecase "Access Patient Record" as UC6
   usecase "Update Medical Record" as UC7
   usecase "Write Prescription" as UC8
@@ -31,17 +31,18 @@ rectangle "Hospital Management System" {
 
   usecase "Register Patient" as UC12
   usecase "Manage Patient Information" as UC13
+  usecase "Manage Appointments" as UC14
 
-  usecase "Upload Lab Results" as UC14
-  usecase "Upload Radiology Report" as UC15
+  usecase "Upload Lab Results" as UC15
+  usecase "Upload Radiology Report" as UC16
 
-  usecase "Process Prescription" as UC16
-  usecase "Dispense Medication" as UC17
+  usecase "Process Prescription" as UC17
+  usecase "Dispense Medication" as UC18
 
-  usecase "Generate Invoice" as UC18
-  usecase "Record Payment" as UC19
+  usecase "Generate Invoice" as UC19
+  usecase "Record Payment" as UC20
 
-  usecase "Manage Inpatient Records" as UC20
+  usecase "Manage Inpatient Records" as UC21
 }
 
 Patient --> UC1
@@ -59,17 +60,17 @@ Doctor --> UC11
 
 Admin --> UC12
 Admin --> UC13
-Admin --> UC5
+Admin --> UC14
 
-Lab --> UC14
-Radiology --> UC15
+Lab --> UC15
+Radiology --> UC16
 
-Pharmacist --> UC16
 Pharmacist --> UC17
+Pharmacist --> UC18
 
-Billing --> UC18
 Billing --> UC19
+Billing --> UC20
 
-Ward --> UC20
+Ward --> UC21
 
 @enduml

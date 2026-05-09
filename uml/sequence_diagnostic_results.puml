@@ -8,32 +8,77 @@ participant "Backend API" as api
 database "Centralized Database" as db
 participant "Notification Service" as notif
 
-doctor -> portal : Open patient medical record
-portal -> api : Request patient record
-api -> db : Retrieve patient record
-db --> api : Patient record returned
-api --> portal : Return patient record
+doctor -> portal : Open patient medical record(patientId)
+activate portal
+
+portal -> api : getPatientRecord(patientId, doctorId)
+activate api
+
+api -> db : retrievePatientRecord(patientId)
+activate db
+db --> api : patientRecord
+deactivate db
+
+api --> portal : returnPatientRecord(patientRecord)
+deactivate api
+
 portal --> doctor : Display patient record
+deactivate portal
 
-doctor -> portal : Request diagnostic test
-portal -> api : Submit test request
-api -> db : Save test request
-db --> api : Test request saved
-api -> dept : Forward test request
+doctor -> portal : Request diagnostic test(patientId, testType, reason)
+activate portal
 
-dept -> portal : Upload diagnostic result
-portal -> api : Submit diagnostic result
-api -> db : Save diagnostic result
-db --> api : Diagnostic result saved
+portal -> api : submitTestRequest(patientId, doctorId, testType, reason)
+activate api
 
-api -> notif : Notify doctor of result availability
+api -> db : saveTestRequest(patientId, doctorId, testType, status="Pending")
+activate db
+db --> api : testRequestSaved(testRequestId)
+deactivate db
+
+api -> dept : forwardTestRequest(testRequestId, patientId, testType)
+deactivate api
+
+portal --> doctor : Display test request confirmation
+deactivate portal
+
+dept -> portal : Upload diagnostic result(testRequestId, resultFile, resultSummary)
+activate portal
+
+portal -> api : submitDiagnosticResult(testRequestId, resultFile, resultSummary, staffId)
+activate api
+
+api -> db : saveDiagnosticResult(testRequestId, resultFile, resultSummary, status="Completed")
+activate db
+db --> api : diagnosticResultSaved(resultId)
+deactivate db
+
+api -> notif : notifyDoctor(doctorId, resultId)
+activate notif
 notif --> doctor : Result available notification
+deactivate notif
 
-doctor -> portal : Review diagnostic results
-portal -> api : Request diagnostic results
-api -> db : Retrieve diagnostic results
-db --> api : Diagnostic results returned
-api --> portal : Return diagnostic results
+api --> portal : resultUploadConfirmation(resultId)
+deactivate api
+
+portal --> dept : Display upload confirmation
+deactivate portal
+
+doctor -> portal : Review diagnostic results(patientId, testRequestId)
+activate portal
+
+portal -> api : getDiagnosticResults(patientId, testRequestId)
+activate api
+
+api -> db : retrieveDiagnosticResults(patientId, testRequestId)
+activate db
+db --> api : diagnosticResults
+deactivate db
+
+api --> portal : returnDiagnosticResults(diagnosticResults)
+deactivate api
+
 portal --> doctor : Display diagnostic results
+deactivate portal
 
 @enduml

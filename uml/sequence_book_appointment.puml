@@ -7,28 +7,45 @@ participant "Backend API" as api
 database "Centralized Database" as db
 participant "Notification Service" as notif
 
-patient -> portal : Book appointment
-portal -> api : Submit appointment request
+patient -> portal : Book appointment(patientId, doctorId, date, time)
+activate portal
 
-api -> db : Validate patient information
-db --> api : Patient data returned
+portal -> api : submitAppointmentRequest(patientId, doctorId, date, time)
+activate api
 
-api -> db : Check doctor availability
-db --> api : Available slots returned
+api -> db : validatePatient(patientId)
+activate db
+db --> api : patientData
+deactivate db
+
+api -> db : checkDoctorAvailability(doctorId, date, time)
+activate db
+db --> api : availableSlots
+deactivate db
 
 alt Slot available
-    api -> db : Save appointment record
-    db --> api : Appointment saved
+    api -> db : saveAppointment(patientId, doctorId, date, time, status="Confirmed")
+    activate db
+    db --> api : appointmentSaved(appointmentId)
+    deactivate db
 
-    api -> notif : Send appointment confirmation
+    api -> notif : sendAppointmentConfirmation(patientId, appointmentId)
+    activate notif
     notif --> patient : Appointment confirmation
+    deactivate notif
 
-    api --> portal : Return booking confirmation
+    api --> portal : bookingConfirmation(appointmentId, status)
+    deactivate api
+
     portal --> patient : Display booking confirmation
+    deactivate portal
 
 else Slot unavailable
-    api --> portal : Return unavailable slot message
+    api --> portal : unavailableSlotMessage(alternativeSlots)
+    deactivate api
+
     portal --> patient : Display alternative slots
+    deactivate portal
 end
 
 @enduml

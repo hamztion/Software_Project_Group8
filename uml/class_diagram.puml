@@ -6,10 +6,6 @@ skinparam shadowing false
 skinparam classAttributeIconSize 0
 skinparam defaultTextAlignment center
 
-' =========================
-' Users and Staff
-' =========================
-
 abstract class User {
   - userId: int
   - name: String
@@ -51,9 +47,9 @@ class BillingOfficer {
   + recordPayment(): void
 }
 
-class DepartmentStaff {
+class LaboratoryRadiologyStaff {
   - departmentName: String
-  + uploadDepartmentReport(): void
+  + uploadDiagnosticResult(): void
 }
 
 class Pharmacist {
@@ -64,10 +60,6 @@ class Pharmacist {
 class InpatientWardStaff {
   + manageInpatientRecord(): void
 }
-
-' =========================
-' Main Hospital Records
-' =========================
 
 class Appointment {
   - appointmentId: int
@@ -129,32 +121,25 @@ class Department {
   + assignStaff(): void
 }
 
-' =========================
-' Generalization / Inheritance
-' =========================
-
 User <|-- Patient
 User <|-- Staff
 
 Staff <|-- Doctor
 Staff <|-- AdministrativeStaff
 Staff <|-- BillingOfficer
-Staff <|-- DepartmentStaff
+Staff <|-- LaboratoryRadiologyStaff
 Staff <|-- Pharmacist
 Staff <|-- InpatientWardStaff
-
-' =========================
-' Associations
-' =========================
 
 Patient "1" -- "0..*" Appointment : books
 Doctor "1" -- "0..*" Appointment : attends
 AdministrativeStaff "1" -- "0..*" Appointment : manages
 
 Doctor "1" -- "0..*" DiagnosticTest : requests
-DepartmentStaff "1" -- "0..*" DiagnosticTest : handles
+LaboratoryRadiologyStaff "1" -- "0..*" DiagnosticTest : handles
 
 Doctor "1" -- "0..*" Prescription : writes
+Patient "1" -- "0..*" Prescription : receives
 Pharmacist "1" -- "0..*" Prescription : processes
 
 BillingOfficer "1" -- "0..*" Invoice : generates
@@ -162,21 +147,11 @@ Patient "1" -- "0..*" Invoice : receives
 
 InpatientWardStaff "1" -- "0..*" InpatientRecord : manages
 
-' =========================
-' Composition
-' Strong ownership
-' =========================
-
-Patient "1" *-- "1" MedicalRecord : owns
+Patient "1" *-- "0..*" MedicalRecord : owns
 MedicalRecord "1" *-- "0..*" DiagnosticTest : contains
 MedicalRecord "1" *-- "0..*" Prescription : contains
 MedicalRecord "1" *-- "0..*" InpatientRecord : contains
 Invoice "1" *-- "0..*" Payment : has
-
-' =========================
-' Aggregation
-' Department can exist without staff
-' =========================
 
 Department "1" o-- "0..*" Staff : includes
 

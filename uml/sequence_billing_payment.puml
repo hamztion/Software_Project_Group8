@@ -8,29 +8,65 @@ participant "Backend API" as api
 database "Centralized Database" as db
 participant "Notification Service" as notif
 
-billing -> portal : Generate invoice
-portal -> api : Submit invoice request
-api -> db : Retrieve billing data
-db --> api : Billing data returned
-api -> db : Save invoice
-db --> api : Invoice saved
-api -> notif : Send billing notification
+billing -> portal : Generate invoice(patientId, serviceIds)
+activate portal
+
+portal -> api : submitInvoiceRequest(patientId, billingOfficerId, serviceIds)
+activate api
+
+api -> db : retrieveBillingData(patientId, serviceIds)
+activate db
+db --> api : billingData
+deactivate db
+
+api -> db : saveInvoice(patientId, billingData, status="Unpaid")
+activate db
+db --> api : invoiceSaved(invoiceId)
+deactivate db
+
+api -> notif : sendBillingNotification(patientId, invoiceId)
+activate notif
 notif --> patient : Billing notification
-api --> portal : Return invoice details
+deactivate notif
+
+api --> portal : invoiceDetails(invoiceId, amount, status)
+deactivate api
+
 portal --> billing : Display generated invoice
+deactivate portal
 
-billing -> portal : Record payment
-portal -> api : Submit payment details
-api -> db : Update payment status
-db --> api : Payment status updated
-api --> portal : Return payment confirmation
+billing -> portal : Record payment(invoiceId, amountPaid, paymentMethod)
+activate portal
+
+portal -> api : submitPaymentDetails(invoiceId, amountPaid, paymentMethod, billingOfficerId)
+activate api
+
+api -> db : updatePaymentStatus(invoiceId, amountPaid, status="Paid")
+activate db
+db --> api : paymentStatusUpdated
+deactivate db
+
+api --> portal : paymentConfirmation(invoiceId, status)
+deactivate api
+
 portal --> billing : Display payment confirmation
+deactivate portal
 
-patient -> portal : View billing details
-portal -> api : Request billing information
-api -> db : Retrieve billing information
-db --> api : Billing information returned
-api --> portal : Return billing details
+patient -> portal : View billing details(patientId)
+activate portal
+
+portal -> api : getBillingInformation(patientId)
+activate api
+
+api -> db : retrieveBillingInformation(patientId)
+activate db
+db --> api : billingInformation
+deactivate db
+
+api --> portal : returnBillingDetails(billingInformation)
+deactivate api
+
 portal --> patient : Display billing details
+deactivate portal
 
 @enduml
