@@ -67,7 +67,7 @@ The purpose of the system is to improve communication between patients, doctors,
 
 | Member Name | Role / Contribution | Number of Commits |
 |---|---|---|
-| Hamza Bodair | Created context diagram, container diagram, DFD, and repository setup | TBD |
-| Hamza Abu-Sair | Created activity diagram and use case diagram | TBD |
-| Abdalrahman Abu Zahra | Created sequence diagrams and use case descriptions | TBD |
-| Nazeeh AlHanbali | Prepared class diagram, report explanations, and final formatting | TBD |
+| Hamza Bodair | Created context diagram, container diagram, DFD, and repository setup | 23 |
+| Hamza Abu-Sair | Created activity diagram and use case diagram | 2 |
+| Abdalrahman Abu Zahra | Created sequence diagrams and use case descriptions | 2 |
+| Nazeeh AlHanbali | Prepared class diagram, report explanations, and final formatting | 3 |
